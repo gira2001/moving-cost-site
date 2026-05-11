@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>引越し相場まとめ</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', sans-serif;
+      background-color: #f5f7fa;
+      color: #333;
+    }
+
+    /* ヘッダー */
+    header {
+      background-color: #2563eb;
+      color: white;
+      padding: 16px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    header h1 {
+      font-size: 20px;
+      font-weight: bold;
+    }
+
+    .post-btn {
+      background: white;
+      color: #2563eb;
+      border: none;
+      border-radius: 8px;
+      padding: 8px 16px;
+      font-size: 14px;
+      font-weight: bold;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background 0.2s;
+    }
+
+    .post-btn:hover {
+      background: #eff6ff;
+    }
+
+    /* ヒーロー */
+    .hero {
+      background: linear-gradient(135deg, #2563eb, #1d4ed8);
+      color: white;
+      padding: 40px 24px;
+      text-align: center;
+    }
+
+    .hero h2 {
+      font-size: 26px;
+      font-weight: bold;
+      margin-bottom: 8px;
+    }
+
+    .hero p {
+      font-size: 15px;
+      opacity: 0.85;
+    }
+
+    /* 統計バー */
+    .stats-bar {
+      background: white;
+      border-bottom: 1px solid #e5e7eb;
+      padding: 16px 24px;
+      display: flex;
+      gap: 32px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .stat-item {
+      text-align: center;
+    }
+
+    .stat-value {
+      font-size: 22px;
+      font-weight: bold;
+      color: #2563eb;
+    }
+
+    .stat-label {
+      font-size: 12px;
+      color: #6b7280;
+      margin-top: 2px;
+    }
+
+    /* メイン */
+    main {
+      max-width: 900px;
+      margin: 32px auto;
+      padding: 0 16px;
+    }
+
+    /* フィルター */
+    .filter-card {
+      background: white;
+      border-radius: 12px;
+      padding: 20px 24px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+      margin-bottom: 24px;
+    }
+
+    .filter-title {
+      font-size: 14px;
+      font-weight: bold;
+      color: #374151;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .filter-row {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      align-items: flex-end;
+    }
+
+    .filter-group {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      flex: 1;
+      min-width: 140px;
+    }
+
+    .filter-group label {
+      font-size: 12px;
+      color: #6b7280;
+      font-weight: 600;
+    }
+
+    .filter-group select {
+      padding: 8px 32px 8px 10px;
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      font-size: 14px;
+      background: #fafafa;
+      appearance: none;
+      -webkit-appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%236b7280' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 10px center;
+      cursor: pointer;
+    }
+
+    .filter-group select:focus {
+      outline: none;
+      border-color: #2563eb;
+    }
+
+    .filter-btn {
+      padding: 9px 20px;
+      background: #2563eb;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: bold;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .reset-btn {
+      padding: 9px 16px;
+      background: white;
+      color: #6b7280;
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      font-size: 14px;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    /* 件数・ソート */
+    .list-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+
+    .result-count {
+      font-size: 14px;
+      color: #6b7280;
+    }
+
+    .result-count span {
+      font-weight: bold;
+      color: #111;
+    }
+
+    .sort-select {
+      padding: 6px 28px 6px 10px;
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      font-size: 13px;
+      appearance: none;
+      -webkit-appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%236b7280' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 8px center;
+      background-color: white;
+      cursor: pointer;
+    }
+
+    /* カードリスト */
+    .card-list {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .card {
+      background: white;
+      border-radius: 12px;
+      padding: 20px 24px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 12px;
+      transition: box-shadow 0.2s;
+    }
+
+    .card:hover {
+      box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+    }
+
+    .card-left {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    /* ルート */
+    .route {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 18px;
+      font-weight: bold;
+      color: #1e3a8a;
+    }
+
+    .route-arrow {
+      color: #9ca3af;
+      font-size: 16px;
+    }
+
+    /* タグ */
+    .tags {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .tag {
+      background: #eff6ff;
+      color: #2563eb;
+      padding: 3px 10px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .tag.green {
+      background: #f0fdf4;
+      color: #16a34a;
+    }
+
+    .tag.gray {
+      background: #f3f4f6;
+      color: #6b7280;
+    }
+
+    /* 業者・コメント */
+    .company-name {
+      font-size: 13px;
+      color: #6b7280;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .comment-text {
+      font-size: 13px;
+      color: #4b5563;
+      background: #f9fafb;
+      padding: 8px 12px;
+      border-radius: 6px;
+      border-left: 3px solid #e5e7eb;
+    }
+
+    /* 右カラム（費用・星） */
+    .card-right {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      justify-content: space-between;
+      min-width: 120px;
+    }
+
+    .cost {
+      font-size: 26px;
+      font-weight: bold;
+      color: #111;
+    }
+
+    .cost-unit {
+      font-size: 14px;
+      color: #6b7280;
+      font-weight: normal;
+    }
+
+    .stars {
+      color: #f59e0b;
+      font-size: 16px;
+      letter-spacing: 1px;
+    }
+
+    .stars-empty {
+      color: #d1d5db;
+    }
+
+    .posted-date {
+      font-size: 11px;
+      color: #9ca3af;
+    }
+
+    /* ページネーション */
+    .pagination {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 32px;
+    }
+
+    .page-btn {
+      width: 36px;
+      height: 36px;
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      background: white;
+      cursor: pointer;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+    }
+
+    .page-btn.active {
+      background: #2563eb;
+      color: white;
+      border-color: #2563eb;
+    }
+
+    .page-btn:hover:not(.active) {
+      background: #f3f4f6;
+    }
+
+    @media (max-width: 600px) {
+      .card {
+        grid-template-columns: 1fr;
+      }
+      .card-right {
+        flex-direction: row;
+        align-items: center;
+        min-width: unset;
+      }
+      .stats-bar {
+        gap: 16px;
+      }
+      .hero h2 {
+        font-size: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="header-left">
+      <span>🚚</span>
+      <h1>引越し相場まとめ</h1>
+    </div>
+    <a href="post.html" class="post-btn">＋ 投稿する</a>
+  </header>
+
+  <!-- ヒーロー -->
+  <div class="hero">
+    <h2>みんなの引越し費用を確認しよう</h2>
+    <p>実際にかかった費用をもとに、あなたの引越しの相場をチェック</p>
+  </div>
+
+  <!-- 統計バー -->
+  <div class="stats-bar">
+    <div class="stat-item">
+      <div class="stat-value" id="totalCount">0</div>
+      <div class="stat-label">投稿件数</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-value" id="avgCost">0</div>
+      <div class="stat-label">平均費用</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-value" id="minCost">0</div>
+      <div class="stat-label">最安値</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-value" id="maxCost">0</div>
+      <div class="stat-label">最高値</div>
+    </div>
+  </div>
+
+  <main>
+
+    <!-- フィルター -->
+    <div class="filter-card">
+      <div class="filter-title">🔍 絞り込み検索</div>
+      <div class="filter-row">
+        <div class="filter-group">
+          <label>出発地</label>
+          <select id="filterFrom">
+            <option value="">すべて</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label>目的地</label>
+          <select id="filterTo">
+            <option value="">すべて</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label>間取り</label>
+          <select id="filterLayout">
+            <option value="">すべて</option>
+            <option value="single">単身</option>
+            <option value="1k">1K / 1DK</option>
+            <option value="1ldk">1LDK</option>
+            <option value="2ldk">2LDK</option>
+            <option value="3ldk">3LDK</option>
+            <option value="4ldk">4LDK以上</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label>費用（上限）</label>
+          <select id="filterCost">
+            <option value="">上限なし</option>
+            <option value="50000">5万円以下</option>
+            <option value="100000">10万円以下</option>
+            <option value="200000">20万円以下</option>
+            <option value="300000">30万円以下</option>
+          </select>
+        </div>
+        <button class="filter-btn" onclick="applyFilter()">検索</button>
+        <button class="reset-btn" onclick="resetFilter()">リセット</button>
+      </div>
+    </div>
+
+    <!-- 件数・ソート -->
+    <div class="list-header">
+      <div class="result-count"><span id="displayCount">0</span> 件表示</div>
+      <select class="sort-select" id="sortSelect" onchange="applyFilter()">
+        <option value="newest">新着順</option>
+        <option value="cost_asc">費用が安い順</option>
+        <option value="cost_desc">費用が高い順</option>
+        <option value="rating">満足度が高い順</option>
+      </select>
+    </div>
+
+    <!-- カードリスト -->
+    <div class="card-list" id="cardList"></div>
+
+    <!-- ページネーション -->
+    <div class="pagination" id="pagination"></div>
+
+  </main>
+
+  <script>
+    const API_BASE = 'http://localhost:8080/api';
+    const layoutMap = { single: '単身', '1k': '1K/1DK', '1ldk': '1LDK', '2ldk': '2LDK', '3ldk': '3LDK', '4ldk': '4LDK以上' };
+    let currentPage = 1;
+    let currentTotal = 0;
+    const LIMIT = 6;
+
+    // 地域・都道府県リスト
+    const regions = [
+      { label: '北海道',     prefs: ['北海道'] },
+      { label: '東北',       prefs: ['青森県','岩手県','宮城県','秋田県','山形県','福島県'] },
+      { label: '関東',       prefs: ['茨城県','栃木県','群馬県','埼玉県','千葉県','東京都','神奈川県'] },
+      { label: '中部',       prefs: ['新潟県','富山県','石川県','福井県','山梨県','長野県','岐阜県','静岡県','愛知県'] },
+      { label: '近畿',       prefs: ['三重県','滋賀県','京都府','大阪府','兵庫県','奈良県','和歌山県'] },
+      { label: '中国',       prefs: ['鳥取県','島根県','岡山県','広島県','山口県'] },
+      { label: '四国',       prefs: ['徳島県','香川県','愛媛県','高知県'] },
+      { label: '九州・沖縄', prefs: ['福岡県','佐賀県','長崎県','熊本県','大分県','宮崎県','鹿児島県','沖縄県'] },
+    ];
+
+    // フィルタープルダウンに地域グループで都道府県を追加
+    ['filterFrom', 'filterTo'].forEach(id => {
+      const select = document.getElementById(id);
+      regions.forEach(region => {
+        const group = document.createElement('optgroup');
+        group.label = region.label;
+        region.prefs.forEach(pref => {
+          const opt = document.createElement('option');
+          opt.value = pref; opt.textContent = pref;
+          group.appendChild(opt);
+        });
+        select.appendChild(group);
+      });
+    });
+
+    // 星レンダリング
+    function renderStars(rating) {
+      return '★'.repeat(rating) + '<span class="stars-empty">' + '★'.repeat(5 - rating) + '</span>';
+    }
+
+    // 費用フォーマット
+    function formatCost(cost) {
+      return cost >= 10000
+        ? (cost / 10000).toFixed(cost % 10000 === 0 ? 0 : 1) + '万'
+        : cost.toLocaleString();
+    }
+
+    // クエリパラメータ構築
+    function buildParams(page) {
+      const params = new URLSearchParams();
+      const from    = document.getElementById('filterFrom').value;
+      const to      = document.getElementById('filterTo').value;
+      const layout  = document.getElementById('filterLayout').value;
+      const maxCost = document.getElementById('filterCost').value;
+      const sort    = document.getElementById('sortSelect').value;
+      if (from)    params.set('from', from);
+      if (to)      params.set('to', to);
+      if (layout)  params.set('layout', layout);
+      if (maxCost) params.set('maxCost', maxCost);
+      if (sort)    params.set('sort', sort);
+      params.set('page', page);
+      params.set('limit', LIMIT);
+      return params;
+    }
+
+    // API から投稿一覧取得
+    async function fetchPosts(page) {
+      setLoading(true);
+      try {
+        const params = buildParams(page);
+        const [postsRes, statsRes] = await Promise.all([
+          fetch(`${API_BASE}/posts?${params}`),
+          fetch(`${API_BASE}/stats?${params}`)
+        ]);
+        const postsData = await postsRes.json();
+        const statsData = await statsRes.json();
+        currentTotal = postsData.total;
+        renderCards(postsData.posts);
+        renderPagination(postsData.total, page);
+        updateStats(statsData, postsData.total);
+      } catch (err) {
+        document.getElementById('cardList').innerHTML =
+          '<p style="text-align:center;color:#ef4444;padding:40px;">データの取得に失敗しました。APIサーバーが起動しているか確認してください。</p>';
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    // カード描画
+    function renderCards(posts) {
+      const list = document.getElementById('cardList');
+      if (!posts || posts.length === 0) {
+        list.innerHTML = '<p style="text-align:center;color:#9ca3af;padding:40px;">該当する投稿がありません</p>';
+        return;
+      }
+      list.innerHTML = posts.map(p => `
+        <div class="card">
+          <div class="card-left">
+            <div class="route">
+              <span>${p.fromPrefecture}</span>
+              <span class="route-arrow">→</span>
+              <span>${p.toPrefecture}</span>
+            </div>
+            <div class="tags">
+              <span class="tag">${layoutMap[p.layout] || p.layout}</span>
+              <span class="tag green">見積もり ${p.quotes}社</span>
+              <span class="tag gray">${p.movingDate.replace('-', '年')}月</span>
+            </div>
+            <div class="company-name">🚛 ${p.company}</div>
+            ${p.comment ? `<div class="comment-text">💬 ${p.comment}</div>` : ''}
+          </div>
+          <div class="card-right">
+            <div class="cost">${formatCost(p.cost)}<span class="cost-unit">円</span></div>
+            <div class="stars">${renderStars(p.rating)}</div>
+            <div class="posted-date">${p.movingDate.replace('-', '年')}月</div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // 統計更新
+    function updateStats(stats, total) {
+      document.getElementById('totalCount').textContent = total + '件';
+      document.getElementById('avgCost').textContent = stats.avgCost ? formatCost(stats.avgCost) + '円' : '—';
+      document.getElementById('minCost').textContent = stats.minCost ? formatCost(stats.minCost) + '円' : '—';
+      document.getElementById('maxCost').textContent = stats.maxCost ? formatCost(stats.maxCost) + '円' : '—';
+      document.getElementById('displayCount').textContent = total;
+    }
+
+    // ページネーション
+    function renderPagination(total, page) {
+      const pages = Math.ceil(total / LIMIT);
+      const el = document.getElementById('pagination');
+      el.innerHTML = '';
+      if (pages <= 1) return;
+      for (let i = 1; i <= pages; i++) {
+        const btn = document.createElement('button');
+        btn.className = 'page-btn' + (i === page ? ' active' : '');
+        btn.textContent = i;
+        btn.onclick = () => { currentPage = i; fetchPosts(i); };
+        el.appendChild(btn);
+      }
+    }
+
+    // ローディング表示
+    function setLoading(flag) {
+      const list = document.getElementById('cardList');
+      if (flag) list.innerHTML = '<p style="text-align:center;color:#9ca3af;padding:40px;">読み込み中...</p>';
+    }
+
+    // フィルター適用
+    function applyFilter() {
+      currentPage = 1;
+      fetchPosts(1);
+    }
+
+    // リセット
+    function resetFilter() {
+      ['filterFrom', 'filterTo', 'filterLayout', 'filterCost'].forEach(id => {
+        document.getElementById(id).value = '';
+      });
+      document.getElementById('sortSelect').value = 'newest';
+      applyFilter();
+    }
+
+    // 初期表示
+    fetchPosts(1);
+  </script>
+
+</body>
+</html>
