@@ -167,6 +167,33 @@
       background: white;
     }
 
+    /* 業者カラーバッジ */
+    .company-preview {
+      display: none;
+      align-items: center;
+      gap: 8px;
+      margin-top: 8px;
+      padding: 8px 12px;
+      background: #f9fafb;
+      border-radius: 8px;
+      border: 1px solid #e5e7eb;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .company-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    /* その他入力欄 */
+    .other-input {
+      display: none;
+      margin-top: 8px;
+    }
+
     /* 費用入力 */
     .input-with-unit {
       position: relative;
@@ -366,7 +393,27 @@
 
           <div class="form-group">
             <label>引越し業者名<span class="required">*必須</span></label>
-            <input type="text" id="company" placeholder="例: サカイ引越センター">
+            <select id="company" onchange="onCompanyChange()" required>
+              <option value="">選択してください</option>
+              <option value="サカイ引越センター">サカイ引越センター</option>
+              <option value="アート引越センター">アート引越センター</option>
+              <option value="日本通運">日本通運</option>
+              <option value="ヤマトホームコンビニエンス">ヤマトホームコンビニエンス</option>
+              <option value="アップル引越しセンター">アップル引越しセンター</option>
+              <option value="アリさんマークの引越社">アリさんマークの引越社</option>
+              <option value="赤帽">赤帽</option>
+              <option value="引越し侍">引越し侍</option>
+              <option value="ハート引越センター">ハート引越センター</option>
+              <option value="アクア引越センター">アクア引越センター</option>
+              <option value="その他">その他</option>
+            </select>
+            <div class="company-preview" id="companyPreview">
+              <span class="company-dot" id="companyDot"></span>
+              <span id="companyLabel"></span>
+            </div>
+            <div class="other-input" id="otherInput">
+              <input type="text" id="companyOther" placeholder="業者名を入力してください">
+            </div>
           </div>
         </div>
 
@@ -445,6 +492,43 @@
 
     const API_BASE = 'https://moving-cost-api.onrender.com/api';
 
+    // 業者ブランドカラー
+    const companyColors = {
+      'サカイ引越センター':      '#FF6B00',
+      'アート引越センター':      '#D40000',
+      '日本通運':               '#003399',
+      'ヤマトホームコンビニエンス': '#1A1A1A',
+      'アップル引越しセンター':  '#00963D',
+      'アリさんマークの引越社':  '#E60000',
+      '赤帽':                   '#CC0000',
+      '引越し侍':               '#1B3A8C',
+      'ハート引越センター':      '#E83750',
+      'アクア引越センター':      '#00AEEF',
+    };
+
+    // 業者選択時の処理
+    function onCompanyChange() {
+      const select   = document.getElementById('company');
+      const preview  = document.getElementById('companyPreview');
+      const dot      = document.getElementById('companyDot');
+      const label    = document.getElementById('companyLabel');
+      const other    = document.getElementById('otherInput');
+      const val      = select.value;
+
+      if (val === 'その他') {
+        preview.style.display = 'none';
+        other.style.display = 'block';
+      } else if (val && companyColors[val]) {
+        dot.style.background = companyColors[val];
+        label.textContent = val;
+        preview.style.display = 'flex';
+        other.style.display = 'none';
+      } else {
+        preview.style.display = 'none';
+        other.style.display = 'none';
+      }
+    }
+
     // フォーム送信
     document.getElementById('postForm').addEventListener('submit', async (e) => {
       e.preventDefault();
@@ -465,7 +549,9 @@
         layout:         document.getElementById('layout').value,
         movingDate:     document.getElementById('movingDate').value,
         cost:           parseInt(document.getElementById('cost').value),
-        company:        document.getElementById('company').value,
+        company:        document.getElementById('company').value === 'その他'
+                          ? document.getElementById('companyOther').value
+                          : document.getElementById('company').value,
         rating:         parseInt(rating.value),
         quotes:         parseInt(document.getElementById('quotes').value),
         comment:        document.getElementById('comment').value || null,

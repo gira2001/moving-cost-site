@@ -497,6 +497,20 @@
 
   <script>
     const API_BASE = 'https://moving-cost-api.onrender.com/api';
+
+    // 業者ブランドカラー
+    const companyColors = {
+      'サカイ引越センター':        '#FF6B00',
+      'アート引越センター':        '#D40000',
+      '日本通運':                 '#003399',
+      'ヤマトホームコンビニエンス': '#1A1A1A',
+      'アップル引越しセンター':    '#00963D',
+      'アリさんマークの引越社':    '#E60000',
+      '赤帽':                     '#CC0000',
+      '引越し侍':                 '#1B3A8C',
+      'ハート引越センター':        '#E83750',
+      'アクア引越センター':        '#00AEEF',
+    };
     const layoutMap = { single: '単身', '1k': '1K/1DK', '1ldk': '1LDK', '2ldk': '2LDK', '3ldk': '3LDK', '4ldk': '4LDK以上' };
     let currentPage = 1;
     let currentTotal = 0;
@@ -602,7 +616,11 @@
               <span class="tag green">見積もり ${p.quotes}社</span>
               <span class="tag gray">${p.movingDate.replace('-', '年')}月</span>
             </div>
-            <div class="company-name">🚛 ${p.company}</div>
+            <div class="company-name">
+              ${companyColors[p.company]
+                ? `<span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:${companyColors[p.company]};margin-right:4px;vertical-align:middle;"></span>`
+                : '🚛 '}${p.company}
+            </div>
             ${p.comment ? `<div class="comment-text">💬 ${p.comment}</div>` : ''}
           </div>
           <div class="card-right">
